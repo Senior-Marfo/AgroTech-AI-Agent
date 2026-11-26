@@ -7,7 +7,6 @@ Related work (see proposal section 2):
 4. Ayisi-Nyarko, Masambuka-Kanchewa & Yakubu (2024). E-extension services prospects in Ghana. Heliyon 10, e26058.
 5. Abdulai (2024). Are rural smallholders ready for agricultural digitalization? In Chowdhury & Gow (Eds.), Digital communication for agricultural and rural development. Routledge.
 
-Rule sources (see data/README.md): IITA (2025) guide; FAO maize crop information page.
+Rule sources (data/README.md): IITA (2025) guide; FAO maize crop information page.
 
 Note: "AgroTech" in source 3 is a Grameen Foundation platform. This team's name is unrelated.
-Team to do: re-open each source, confirm the citation details, and record the check in ai_use_log.md.
