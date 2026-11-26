@@ -8,6 +8,7 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "evaluation"))
 
 from agro_agent import agent, baseline  # noqa: E402
+from agro_agent.schema import STAGES  # noqa: E402
 from agro_agent.decision import CLARIFY, RECOMMEND, REFER, REJECT  # noqa: E402
 from agro_agent.logger import LOG_FIELDS, log_decision  # noqa: E402
 import generate_scenarios  # noqa: E402
@@ -16,22 +17,22 @@ import generate_scenarios  # noqa: E402
 def case(**overrides):
     base = {
         "case_id": "T",
-        "crop": "maize",
-        "stage": "vegetative",
+        "crop": "plantain",
+        "stage": "nurturing",
         "soil_moisture_pct": 40,
         "temperature_c": 30,
         "rainfall_7d": "light",
-        "symptom": "none",
+        "observation": "none",
     }
     base.update(overrides)
     return base
 
 
-def test_normal_pest_sign_recommends_scouting_with_source():
-    d = agent.decide(case(symptom="windowpane_holes_and_frass"))
+def test_normal_weevil_sign_recommends_sanitation_with_source():
+    d = agent.decide(case(observation="weevil_damage_at_base"))
     assert d.action == RECOMMEND
-    assert "R-FAW-01" in d.rule_ids
-    assert d.sources and "IITA" in d.sources[0]
+    assert "R-WEEVIL-01" in d.rule_ids
+    assert d.sources and "Nkakwa" in d.sources[0]
     assert "not a diagnosis" in d.message.lower()
 
 
@@ -47,25 +48,71 @@ def test_missing_value_triggers_clarify():
 
 
 def test_other_crop_is_rejected():
-    assert agent.decide(case(crop="sorghum")).action == REJECT
+    assert agent.decide(case(crop="maize")).action == REJECT
 
 
 def test_impossible_temperature_is_rejected():
     assert agent.decide(case(temperature_c=999)).action == REJECT
 
 
+def test_unknown_stage_is_rejected():
+    assert agent.decide(case(stage="unknown")).action == REJECT
+
+
 def test_non_dict_input_is_rejected_not_crashed():
     assert agent.decide("not a report").action == REJECT
 
 
-def test_flowering_without_rain_is_referred_until_cutoff_is_sourced():
-    d = agent.decide(case(stage="flowering", rainfall_7d="none"))
-    assert d.action == REFER and d.rule_ids[0] == "R-FLOW-WATER-01"
+# One farmer task per row: (stage, observation, expected rule id).
+STAGE_TASKS = [
+    ("pre_planting", "land_not_cleared", "R-CLEAR-01"),
+    ("planting", "holes_not_dug", "R-HOLES-01"),
+    ("planting", "sockets_not_planted", "R-PLANT-01"),
+    ("nurturing", "weeds_present", "R-WEED-01"),
+    ("nurturing", "bare_soil_no_humus", "R-HUMUS-01"),
+    ("nurturing", "plant_leaning_or_bending", "R-PROP-01"),
+    ("harvesting", "flower_emerged", "R-FLOWER-01"),
+    ("harvesting", "bunch_looks_mature", "R-HARVEST-01"),
+    ("socket_replacement", "harvested_stalk_standing", "R-STALK-01"),
+    ("socket_replacement", "sockets_available", "R-SOCKET-PROP-01"),
+    ("socket_replacement", "sockets_ready_to_harvest", "R-SOCKET-HARVEST-01"),
+]
+
+
+def test_every_stage_task_has_a_rule():
+    for stage, observation, rule_id in STAGE_TASKS:
+        d = agent.decide(case(stage=stage, observation=observation))
+        assert d.action == RECOMMEND and d.rule_ids[0] == rule_id, (stage, observation)
+
+
+def test_all_five_stages_are_covered_by_tasks():
+    assert {s for s, _, _ in STAGE_TASKS} == set(STAGES)
+
+
+def test_watering_if_rains_fail_in_nurturing_and_socket_replacement():
+    assert agent.decide(case(rainfall_7d="none")).rule_ids[0] == "R-WATER-NURT-01"
+    d = agent.decide(case(stage="socket_replacement", rainfall_7d="none"))
+    assert d.rule_ids[0] == "R-WATER-SOCKET-01"
+
+
+def test_importing_sockets_is_referred_to_an_officer():
+    d = agent.decide(case(stage="pre_planting", observation="sockets_to_import"))
+    assert d.action == REFER and d.rule_ids[0] == "R-IMPORT-01"
+
+
+def test_task_in_the_wrong_stage_is_referred_not_guessed():
+    d = agent.decide(case(stage="harvesting", observation="weeds_present"))
+    assert d.action == REFER and d.rule_ids == ()
+
+
+def test_unexplained_sign_is_referred():
+    d = agent.decide(case(observation="yellowing"))
+    assert d.action == REFER and d.rule_ids[0] == "R-UNMATCHED-OBS-01"
 
 
 def test_priority_ranking_puts_stage_critical_concern_first():
-    d = agent.decide(case(stage="flowering", rainfall_7d="none", symptom="yellowing"))
-    assert d.rule_ids[:2] == ("R-FLOW-WATER-01", "R-UNMATCHED-SYMPTOM-01")
+    d = agent.decide(case(rainfall_7d="none", observation="weevil_damage_at_base"))
+    assert d.rule_ids[:2] == ("R-WATER-NURT-01", "R-WEEVIL-01")
 
 
 def test_baseline_alerts_on_single_thresholds_and_never_abstains():
