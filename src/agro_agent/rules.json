@@ -1,41 +1,158 @@
 {
-  "version": "0.1-m2-stub",
-  "note": "Only rules with a verified source are listed. Soil-moisture and temperature cut-offs are NOT included until each has a source (Sprint 1). Lower priority number = handled first.",
+  "version": "0.2-plantain-stub",
+  "note": "Stage-task rules for plantain. Soil-moisture and temperature cut-offs are NOT included until each has a source (Sprint 1). Rules marked 'citation pending' come from the team's farmer-task list (26 Nov 2026) and must be sourced or changed to REFER before the test set is opened. 'Socket' = sucker used as planting material. Lower priority number = handled first.",
   "rules": [
     {
-      "id": "R-FLOW-WATER-01",
-      "concern": "possible water stress at flowering",
+      "id": "R-WATER-NURT-01",
+      "concern": "possible water shortage while nurturing",
       "priority": 1,
-      "when": {"stage": ["flowering"], "rainfall_7d": ["none"]},
-      "action": "REFER",
-      "message": "Flowering is the stage most sensitive to water shortage and no rain was reported this week. A sourced soil-moisture cut-off is not yet available, so please ask your extension officer to assess the field.",
-      "source": "FAO crop information: Maize (flowering most sensitive to water deficit); cut-off pending"
-    },
-    {
-      "id": "R-FAW-01",
-      "concern": "possible fall armyworm feeding",
-      "priority": 2,
-      "when": {"symptom": ["windowpane_holes_and_frass"]},
+      "when": {"stage": ["nurturing"], "rainfall_7d": ["none"]},
       "action": "RECOMMEND",
-      "message": "Possible fall armyworm feeding. Check 10 consecutive plants at each of 10 random spots in the field. If about 20% of plants have larvae, contact your extension officer or agro-input dealer for control advice.",
-      "source": "IITA Guide for sustainable maize production in Ghana (2025), p. 27"
+      "message": "No rain was reported this week. If the rains fail, water the plantain. A sourced soil-moisture cut-off is not yet available, so check the soil and ask your extension officer if unsure.",
+      "source": "FAO crop information: Banana (frequent water supply; water deficit affects growth and fruit filling); cut-off pending"
     },
     {
-      "id": "R-UNMATCHED-SYMPTOM-01",
-      "concern": "symptom without a supported rule",
+      "id": "R-WATER-SOCKET-01",
+      "concern": "root system may need water during socket replacement",
+      "priority": 1,
+      "when": {"stage": ["socket_replacement"], "rainfall_7d": ["none"]},
+      "action": "RECOMMEND",
+      "message": "No rain was reported this week. Make sure the root system of the plantain stand and the new sockets are watered.",
+      "source": "FAO crop information: Banana (frequent water supply); cut-off pending"
+    },
+    {
+      "id": "R-WEEVIL-01",
+      "concern": "possible banana weevil damage at the base",
+      "priority": 2,
+      "when": {"observation": ["weevil_damage_at_base"]},
+      "action": "RECOMMEND",
+      "message": "Possible weevil damage at the base. Keep the farm clean, dispose of old plant residue properly and trap weevils with split pseudostems. Ask your extension officer if damage spreads.",
+      "source": "Nkakwa et al. (2007), Ghana J. Agric. Sci. 40, p. 182"
+    },
+    {
+      "id": "R-IMPORT-01",
+      "concern": "importation of sockets",
+      "priority": 2,
+      "when": {"stage": ["pre_planting"], "observation": ["sockets_to_import"]},
+      "action": "REFER",
+      "message": "Importing sockets may be subject to import and plant-health rules. Please ask your extension officer before you bring sockets in.",
+      "source": "No source yet; safeguard rule, citation pending"
+    },
+    {
+      "id": "R-PROP-01",
+      "concern": "plantain bending over",
+      "priority": 3,
+      "when": {"stage": ["nurturing"], "observation": ["plant_leaning_or_bending"]},
+      "action": "RECOMMEND",
+      "message": "Support the plantain that are bending over with firm props so they do not topple or snap.",
+      "source": "Nkakwa et al. (2007), Ghana J. Agric. Sci. 40, p. 182 (firm props)"
+    },
+    {
+      "id": "R-WEED-01",
+      "concern": "weeds in the plantation",
+      "priority": 4,
+      "when": {"stage": ["nurturing"], "observation": ["weeds_present"]},
+      "action": "RECOMMEND",
+      "message": "Control the weeds. Cleared weeds can be left to decay on the field as organic matter.",
+      "source": "Nkakwa et al. (2007), Ghana J. Agric. Sci. 40, p. 178"
+    },
+    {
+      "id": "R-HUMUS-01",
+      "concern": "bare soil, humus not placed",
+      "priority": 5,
+      "when": {"stage": ["nurturing"], "observation": ["bare_soil_no_humus"]},
+      "action": "RECOMMEND",
+      "message": "Place humus (organic matter) around the plantain stools.",
+      "source": "Team task list, citation pending"
+    },
+    {
+      "id": "R-CLEAR-01",
+      "concern": "farm not yet cleared",
+      "priority": 4,
+      "when": {"stage": ["pre_planting"], "observation": ["land_not_cleared"]},
+      "action": "RECOMMEND",
+      "message": "Clear the farm before planting.",
+      "source": "Team task list, citation pending"
+    },
+    {
+      "id": "R-HOLES-01",
+      "concern": "planting holes not yet made",
+      "priority": 4,
+      "when": {"stage": ["planting"], "observation": ["holes_not_dug"]},
+      "action": "RECOMMEND",
+      "message": "Make the holes for the sockets.",
+      "source": "Team task list, citation pending"
+    },
+    {
+      "id": "R-PLANT-01",
+      "concern": "sockets not yet planted",
+      "priority": 4,
+      "when": {"stage": ["planting"], "observation": ["sockets_not_planted"]},
+      "action": "RECOMMEND",
+      "message": "Plant the sockets. Use clean, healthy sockets with the outer layer pared off.",
+      "source": "Nkakwa et al. (2007), Ghana J. Agric. Sci. 40, pp. 178, 182"
+    },
+    {
+      "id": "R-FLOWER-01",
+      "concern": "flowering of plantain",
+      "priority": 4,
+      "when": {"stage": ["harvesting"], "observation": ["flower_emerged"]},
+      "action": "RECOMMEND",
+      "message": "Flowering has started. Keep monitoring the flowers and the bunch.",
+      "source": "Team task list, citation pending"
+    },
+    {
+      "id": "R-HARVEST-01",
+      "concern": "bunch looks mature",
+      "priority": 4,
+      "when": {"stage": ["harvesting"], "observation": ["bunch_looks_mature"]},
+      "action": "RECOMMEND",
+      "message": "Harvest the matured plantain. If you are unsure the bunch is mature, ask your extension officer.",
+      "source": "Team task list, citation pending"
+    },
+    {
+      "id": "R-STALK-01",
+      "concern": "harvested stalk still standing",
+      "priority": 4,
+      "when": {"stage": ["socket_replacement"], "observation": ["harvested_stalk_standing"]},
+      "action": "RECOMMEND",
+      "message": "Cut down the stalk of the harvested plantain and dispose of the residue properly.",
+      "source": "Nkakwa et al. (2007), Ghana J. Agric. Sci. 40, p. 182 (dispose of post-harvest residue)"
+    },
+    {
+      "id": "R-SOCKET-PROP-01",
+      "concern": "sockets available for propagation",
+      "priority": 4,
+      "when": {"stage": ["socket_replacement"], "observation": ["sockets_available"]},
+      "action": "RECOMMEND",
+      "message": "Propagate the sockets. Keep one or two to carry the next crop and remove the extra ones.",
+      "source": "FAO crop information: Banana (suckers removed except one or two for the ratoon crop)"
+    },
+    {
+      "id": "R-SOCKET-HARVEST-01",
+      "concern": "sockets ready to be harvested",
+      "priority": 4,
+      "when": {"stage": ["socket_replacement"], "observation": ["sockets_ready_to_harvest"]},
+      "action": "RECOMMEND",
+      "message": "Harvest the sockets that are ready, for planting or replanting.",
+      "source": "Team task list, citation pending"
+    },
+    {
+      "id": "R-UNMATCHED-OBS-01",
+      "concern": "observation without a supported rule",
       "priority": 8,
-      "when": {"symptom": ["wilting_or_leaf_rolling", "yellowing", "brown_leaf_edges", "other"]},
+      "when": {"observation": ["wilting_or_leaf_rolling", "yellowing", "other"]},
       "action": "REFER",
       "message": "The reported sign can have several causes and no supported rule covers it yet. Please ask your extension officer to look at the crop.",
-      "source": "IITA Guide (2025), pp. 22, 27: consult extension officers"
+      "source": "Safeguard rule: refer unexplained signs to an extension officer"
     },
     {
       "id": "R-MONITOR-00",
       "concern": "no concern matched",
       "priority": 9,
-      "when": {"symptom": ["none"]},
+      "when": {"observation": ["none"]},
       "action": "RECOMMEND",
-      "message": "No concern matched the reported observations. Keep monitoring the crop and report again if conditions or symptoms change.",
+      "message": "No concern matched the reported observations. Keep monitoring the crop and report again if conditions change.",
       "source": "Default monitoring rule"
     }
   ]

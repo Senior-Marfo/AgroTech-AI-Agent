@@ -1,9 +1,9 @@
 {
   "case_id": "EX-FAILURE",
-  "crop": "sorghum",
-  "stage": "vegetative",
+  "crop": "maize",
+  "stage": "nurturing",
   "soil_moisture_pct": 30,
   "temperature_c": 31,
   "rainfall_7d": "moderate",
-  "symptom": "none"
+  "observation": "none"
 }

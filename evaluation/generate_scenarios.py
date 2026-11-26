@@ -1,4 +1,4 @@
-"""Seeded generator for DRAFT synthetic maize scenarios (no reference labels).
+"""Seeded generator for DRAFT synthetic plantain scenarios (no reference labels).
 
 Plan (Milestone 2 proposal, section 8): 90 scenarios = 30 development + 60 test, split evenly
 into normal, ambiguous/incomplete and failure/out-of-scope categories. Reference actions are
@@ -16,32 +16,32 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from agro_agent.schema import RAINFALL_7D, STAGES, SYMPTOMS  # noqa: E402
+from agro_agent.schema import OBSERVATIONS, RAINFALL_7D, STAGES  # noqa: E402
 
 SEED = 313
 PLAN = {"dev": 10, "test": 20}  # cases per category in each split
 CATEGORIES = ("normal", "ambiguous", "failure")
 COLUMNS = [
     "case_id", "split", "category", "crop", "stage", "soil_moisture_pct",
-    "temperature_c", "rainfall_7d", "symptom",
+    "temperature_c", "rainfall_7d", "observation",
     "reference_action", "labeller_a", "labeller_b", "resolved_by",
 ]
 
 
 def _normal(rng):
     return {
-        "crop": "maize",
+        "crop": "plantain",
         "stage": rng.choice(STAGES),
         "soil_moisture_pct": round(rng.uniform(10, 60), 1),
         "temperature_c": round(rng.uniform(22, 38), 1),
         "rainfall_7d": rng.choice(RAINFALL_7D),
-        "symptom": rng.choice(SYMPTOMS),
+        "observation": rng.choice(OBSERVATIONS),
     }
 
 
 def _ambiguous(rng):
     row = _normal(rng)
-    row[rng.choice(("soil_moisture_pct", "temperature_c", "rainfall_7d", "symptom"))] = ""
+    row[rng.choice(("soil_moisture_pct", "temperature_c", "rainfall_7d", "observation"))] = ""
     return row
 
 
@@ -49,7 +49,7 @@ def _failure(rng):
     row = _normal(rng)
     kind = rng.choice(("other_crop", "bad_stage", "impossible_value"))
     if kind == "other_crop":
-        row["crop"] = rng.choice(("sorghum", "cassava", "tomato"))
+        row["crop"] = rng.choice(("maize", "cassava", "tomato"))
     elif kind == "bad_stage":
         row["stage"] = "unknown"
     else:

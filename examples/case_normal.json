@@ -1,9 +1,9 @@
 {
   "case_id": "EX-NORMAL",
-  "crop": "maize",
-  "stage": "vegetative",
+  "crop": "plantain",
+  "stage": "nurturing",
   "soil_moisture_pct": 38,
   "temperature_c": 30,
   "rainfall_7d": "light",
-  "symptom": "windowpane_holes_and_frass"
+  "observation": "weeds_present"
 }

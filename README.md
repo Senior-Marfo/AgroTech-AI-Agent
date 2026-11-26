@@ -1,13 +1,27 @@
-# Smart Agricultural Advisory Agent for Maize Smallholders (Team AgroTech)
+# Smart Agricultural Advisory Agent for Plantain Smallholders (Team AgroTech)
 
 DCIT 313, Semester 1, 2026/2027, University of Ghana. Route A: rule-based agent.
 Status: **Milestone 2 preliminary repository.** No evaluation results exist yet.
 
 ## Purpose
-A rule-based agent turns a farmer's fixed-choice report (growth stage, soil moisture, temperature,
-rainfall, one symptom) into a preliminary action: `RECOMMEND`, `CLARIFY`, `REFER` to an extension
+A rule-based agent turns a farmer's fixed-choice report (crop stage, soil moisture, temperature,
+rainfall, one observation) into a preliminary action: `RECOMMEND`, `CLARIFY`, `REFER` to an extension
 officer, or `REJECT`. It is **non-authoritative**: it never confirms a diagnosis and never gives
 chemical or dosage advice. Research question and plan: see `docs/` and the M2 proposal.
+
+## Stages and farmer tasks covered
+Socket = sucker used as planting material. The rule base (`src/agro_agent/rules.json`) covers:
+
+| Stage | Farmer tasks |
+| --- | --- |
+| `pre_planting` | Farm clearance; importation of sockets (referred to an officer) |
+| `planting` | Making holes for sockets; planting sockets |
+| `nurturing` | Weed control; placement of humus; watering if rains fail; support for plantain that bend over |
+| `harvesting` | Flowering of plantain; monitoring of flowers; harvesting of matured plantain |
+| `socket_replacement` | Cutting down the stalk of harvested plantain; watering the root system; propagation of sockets; harvesting of sockets |
+
+Rules marked "citation pending" in `rules.json` come from the team's task list and must be sourced
+or changed to `REFER` before the test set is opened. Maize and other crops are out of scope (`REJECT`).
 
 ## Compare
 - `B0` (`src/agro_agent/baseline.py`): independent single-threshold alerts, no abstention.
