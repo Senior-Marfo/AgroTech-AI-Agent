@@ -1,0 +1,42 @@
+{
+  "version": "0.1-m2-stub",
+  "note": "Only rules with a verified source are listed. Soil-moisture and temperature cut-offs are NOT included until each has a source (Sprint 1). Lower priority number = handled first.",
+  "rules": [
+    {
+      "id": "R-FLOW-WATER-01",
+      "concern": "possible water stress at flowering",
+      "priority": 1,
+      "when": {"stage": ["flowering"], "rainfall_7d": ["none"]},
+      "action": "REFER",
+      "message": "Flowering is the stage most sensitive to water shortage and no rain was reported this week. A sourced soil-moisture cut-off is not yet available, so please ask your extension officer to assess the field.",
+      "source": "FAO crop information: Maize (flowering most sensitive to water deficit); cut-off pending"
+    },
+    {
+      "id": "R-FAW-01",
+      "concern": "possible fall armyworm feeding",
+      "priority": 2,
+      "when": {"symptom": ["windowpane_holes_and_frass"]},
+      "action": "RECOMMEND",
+      "message": "Possible fall armyworm feeding. Check 10 consecutive plants at each of 10 random spots in the field. If about 20% of plants have larvae, contact your extension officer or agro-input dealer for control advice.",
+      "source": "IITA Guide for sustainable maize production in Ghana (2025), p. 27"
+    },
+    {
+      "id": "R-UNMATCHED-SYMPTOM-01",
+      "concern": "symptom without a supported rule",
+      "priority": 8,
+      "when": {"symptom": ["wilting_or_leaf_rolling", "yellowing", "brown_leaf_edges", "other"]},
+      "action": "REFER",
+      "message": "The reported sign can have several causes and no supported rule covers it yet. Please ask your extension officer to look at the crop.",
+      "source": "IITA Guide (2025), pp. 22, 27: consult extension officers"
+    },
+    {
+      "id": "R-MONITOR-00",
+      "concern": "no concern matched",
+      "priority": 9,
+      "when": {"symptom": ["none"]},
+      "action": "RECOMMEND",
+      "message": "No concern matched the reported observations. Keep monitoring the crop and report again if conditions or symptoms change.",
+      "source": "Default monitoring rule"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "case_id": "EX-AMBIGUOUS",
+  "crop": "maize",
+  "stage": "flowering",
+  "soil_moisture_pct": 22,
+  "rainfall_7d": "none",
+  "symptom": "none"
+}
