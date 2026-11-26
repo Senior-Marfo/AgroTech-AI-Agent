@@ -17,4 +17,4 @@ Last checked: 24 Nov 2026. No dataset of real farms is used. No personal data is
 
 ## Human participants
 None. Any farmer or extension-officer feedback needs lecturer discussion and the University ethics
-determination first (Handbook section 5.1); 
+determination first; 
