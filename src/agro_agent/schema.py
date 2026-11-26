@@ -1,4 +1,4 @@
-"""Input schema and validation for the maize advisory agent.
+"""Input schema and validation for the plantain advisory agent.
 
 Inputs are fixed choices or bounded numbers; free text is not accepted.
 Bounds below are plausibility checks for malformed data, not agronomic thresholds.
@@ -6,23 +6,36 @@ Bounds below are plausibility checks for malformed data, not agronomic threshold
 from dataclasses import dataclass
 from typing import Optional
 
-STAGES = ("establishment", "vegetative", "flowering", "grain_filling", "ripening")
+STAGES = ("pre_planting", "planting", "nurturing", "harvesting", "socket_replacement")
 RAINFALL_7D = ("none", "light", "moderate", "heavy")
-SYMPTOMS = (
+# One observation from a fixed list. Most values map to a farmer task of the matching stage
+# ("socket" = sucker used as planting material).
+OBSERVATIONS = (
     "none",
+    "land_not_cleared",  # pre_planting
+    "sockets_to_import",  # pre_planting
+    "holes_not_dug",  # planting
+    "sockets_not_planted",  # planting
+    "weeds_present",  # nurturing
+    "bare_soil_no_humus",  # nurturing
+    "plant_leaning_or_bending",  # nurturing
+    "weevil_damage_at_base",  # any stage
+    "flower_emerged",  # harvesting
+    "bunch_looks_mature",  # harvesting
+    "harvested_stalk_standing",  # socket_replacement
+    "sockets_available",  # socket_replacement
+    "sockets_ready_to_harvest",  # socket_replacement
     "wilting_or_leaf_rolling",
-    "windowpane_holes_and_frass",
     "yellowing",
-    "brown_leaf_edges",
     "other",
 )
-SUPPORTED_CROP = "maize"
+SUPPORTED_CROP = "plantain"
 
 SOIL_MOISTURE_RANGE = (0.0, 100.0)  # percent
 TEMPERATURE_RANGE = (0.0, 60.0)  # degrees Celsius, plausibility only
 
 # Fields whose absence leads to CLARIFY (ask the farmer), not REJECT.
-CLARIFIABLE = ("soil_moisture_pct", "temperature_c", "rainfall_7d", "symptom")
+CLARIFIABLE = ("soil_moisture_pct", "temperature_c", "rainfall_7d", "observation")
 
 
 class ValidationError(ValueError):
@@ -37,7 +50,7 @@ class Observation:
     soil_moisture_pct: Optional[float]
     temperature_c: Optional[float]
     rainfall_7d: Optional[str]
-    symptom: Optional[str]
+    observation: Optional[str]
 
     @classmethod
     def from_raw(cls, raw: dict) -> "Observation":
@@ -62,7 +75,7 @@ class Observation:
             soil_moisture_pct=num("soil_moisture_pct"),
             temperature_c=num("temperature_c"),
             rainfall_7d=text("rainfall_7d"),
-            symptom=text("symptom"),
+            observation=text("observation"),
         )
 
     def missing_fields(self) -> list:
@@ -74,7 +87,7 @@ def validate(obs: Observation) -> None:
     if not obs.case_id:
         raise ValidationError("case_id is required")
     if obs.crop != SUPPORTED_CROP:
-        raise ValidationError(f"crop '{obs.crop}' is out of scope; only maize is supported")
+        raise ValidationError(f"crop '{obs.crop}' is out of scope; only plantain is supported")
     if obs.stage not in STAGES:
         raise ValidationError(f"stage '{obs.stage}' is not one of {STAGES}")
     for name, (low, high) in (
@@ -88,5 +101,5 @@ def validate(obs: Observation) -> None:
             raise ValidationError(f"{name} must be a number between {low} and {high}")
     if obs.rainfall_7d is not None and obs.rainfall_7d not in RAINFALL_7D:
         raise ValidationError(f"rainfall_7d must be one of {RAINFALL_7D}")
-    if obs.symptom is not None and obs.symptom not in SYMPTOMS:
-        raise ValidationError(f"symptom must be one of {SYMPTOMS}")
+    if obs.observation is not None and obs.observation not in OBSERVATIONS:
+        raise ValidationError(f"observation must be one of {OBSERVATIONS}")

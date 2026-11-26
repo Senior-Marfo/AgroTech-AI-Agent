@@ -1,7 +1,7 @@
 """Baseline B0: independent single-threshold alerts.
 
 Each reading is compared with one fixed threshold; every breach raises a general alert.
-Growth stage is ignored. There is no CLARIFY or REFER, and input is not validated
+The crop stage is ignored. There is no CLARIFY or REFER, and input is not validated
 (missing values simply raise no alert).
 
 The cut-offs below are the illustrative values from the Milestone 1 pitch. They are NOT
@@ -26,8 +26,8 @@ def decide(raw: dict, thresholds=None) -> Decision:
         alerts.append("Temperature is high: consider irrigation.")
     if obs.rainfall_7d == "none":
         alerts.append("No rain this week: monitor the field.")
-    if obs.symptom not in (None, "none"):
-        alerts.append("A symptom was reported: inspect the crop.")
+    if obs.observation not in (None, "none"):
+        alerts.append("An observation was reported: inspect the crop.")
     message = " ".join(alerts) if alerts else "No alert."
     return Decision(
         obs.case_id or "UNKNOWN",
